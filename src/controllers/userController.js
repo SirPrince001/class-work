@@ -5,8 +5,20 @@ exports.registerUser = async (req, res) => {
   let { firstname, lastname, email, password, dob } = req.body;
 
   //validate user input
-  if (!firstname || !lastname || !email || !password || !dob) {
-    return res.status(400).json({ msg: "Please enter all fields" });
+  if (!firstname) {
+    return res.status(400).json({ msg: "Please enter firstname" });
+  }
+  if (!lastname) {
+    return res.status(400).json({ msg: "Please enter lastname" });
+  }
+  if (!email) {
+    return res.status(400).json({ msg: "Please enter email" });
+  }
+  if (!password) {
+    return res.status(400).json({ msg: "Please enter password" });
+  }
+  if (!dob) {
+    return res.status(400).json({ msg: "Please enter date of birth" });
   }
 
   // hash password
@@ -76,5 +88,20 @@ exports.loginUser = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Server Error" });
+  }
+};
+
+//get all students
+exports.getAllStudents = async (req, res) => {
+  try {
+    let students = await User.find();
+    return res.json({
+      success: true,
+      response_message: "All students",
+      data: students,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ msg: "Server Error" });
   }
 };
