@@ -105,3 +105,49 @@ exports.getAllStudents = async (req, res) => {
     return res.status(500).json({ msg: "Server Error" });
   }
 };
+
+exports.updateStudentById = async (req, res) => {
+  try {
+    // Extract the student ID from req.params
+    let { id } = req.params; 
+    console.log("student id :", id);
+
+    // Use findByIdAndUpdate with the correct ID and body data
+    const student = await User.findByIdAndUpdate(id, req.body, {
+      new: true, // returns the updated document
+    });
+
+    if (!student) {
+      return res.status(404).json({ msg: "Student not found" });
+    }
+
+    // Return success response
+    return res.json({
+      success: true,
+      response_message: "Student updated successfully",
+      data: student,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+//delete a student by id
+exports.deleteStudentById = async (req, res) => {
+  try {
+    let {id} = req.params;
+    let student = await User.findByIdAndDelete(id);
+    console.log(student);
+    if (!student) {
+      return res.status(404).json({ msg: "Student not found" });
+    }
+    return res.json({
+      success: true,
+      response_message: "Student deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ msg: "Server Error" });
+  }
+};
